@@ -102,6 +102,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGroup("/api/user").MapUser();
-app.MapGroup("/api/admin").MapAdministrator();
 app.Run();
 
