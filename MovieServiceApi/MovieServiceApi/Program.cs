@@ -9,8 +9,6 @@ using MovieServiceApi.Users.Endpoints;
 using MovieServiceApi.Users.Services;
 using Microsoft.OpenApi.Models;
 using MovieServiceApi.ExceptionHandler;
-using MovieServiceApi.Administrator.Services;
-using MovieServiceApi.Administrator.Endpoints;
 using MovieServiceApi.Utils.Policies;
 using MovieServiceApi.Utils.Roles;
 
@@ -67,7 +65,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //builder.Services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<AdminService>();
 
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 //    .AddCookie();

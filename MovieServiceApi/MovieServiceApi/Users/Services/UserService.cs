@@ -24,10 +24,10 @@ namespace MovieServiceApi.Users.Services
             }
             catch (Exception ex)
             {
-                logger.LogError("Error has occured in user Authentication: {exception}",ex);
+                logger.LogError("Error has occured in user Authentication: {exception}", ex);
                 return null;
             }
-           
+
         }
 
         public async Task<string?> RegisterUser(RegistrationDTO dto)
@@ -35,7 +35,7 @@ namespace MovieServiceApi.Users.Services
             try
             {
                 var passwordHash = CreateHashCode(dto.Password);
-                var user = new User { UsrEmail = dto.Email, UsrPassword = passwordHash, UserRole =  1, UsrName = dto.Username};
+                var user = new User { UsrEmail = dto.Email, UsrPassword = passwordHash, UserRole = 1, UsrName = dto.Username };
                 db.Users.Add(user);
                 int numberOfAdded = await db.SaveChangesAsync();
                 if (numberOfAdded == 0) return null;
@@ -84,9 +84,45 @@ namespace MovieServiceApi.Users.Services
                 return false;
             }
         }
+
+        public async Task<List<UserDTO>?> FindUsers(UserFilterDTO dto)
+        {
+            try
+            {
+                var query = CreateQuery(dto);
+                var users = await query.Select(u => new UserDTO()
+                {
+                    Id = u.UsrId,
+                    Role = u.UserRoleNavigation.UrName,
+                    UserEmail = u.UsrEmail,
+                    UserName = u.UsrName,
+                    BanStatus = u.UserBannedBy == null ? false : true
+                }).ToListAsync();
+                logger.LogInformation("Have been found {count} users: ", users.Count);
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Exception was occured during user searching: {ex}", ex);
+                return null;
+            }
+        }
+
+
+        private IQueryable<User> CreateQuery(UserFilterDTO dto)
+        {
+            IQueryable<User> query = db.Users;
+
+            if (dto.Id is not null) query = query.Where(u => u.UsrId == dto.Id);
+            if (dto.UserName is not null) query = query.Where(u => u.UsrName == dto.UserName);
+            if (dto.IsBanned is not null) query = query.Where(u => dto.IsBanned.Value ? u.UserBannedBy != null : u.UserBannedBy == null);
+            if (dto.Role is not null) query = query.Include(u => u.UserRoleNavigation).Where(u => u.UserRoleNavigation.UrName == dto.Role);
+            return query;
+        }
         private JwtSecurityToken CreateToken(User user)
         {
-            IEnumerable<Claim> claims = 
+            IEnumerable<Claim> claims =
                 [
                     new Claim(ClaimTypes.Name, user.UsrName),
                     new Claim(ClaimTypes.Role, user.UserRoleNavigation.UrName),
@@ -102,6 +138,7 @@ namespace MovieServiceApi.Users.Services
                     SecurityAlgorithms.HmacSha256)
             );
         }
+
         private string CreateHashCode(string input)
         {
             string hash = string.Empty;

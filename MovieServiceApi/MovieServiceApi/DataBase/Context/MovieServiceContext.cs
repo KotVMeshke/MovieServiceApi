@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MovieServiceApi.DataBase.Entities;
 
 namespace MovieServiceApi.DataBase.Context;
@@ -49,8 +50,6 @@ public partial class MovieServiceContext : DbContext
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
     public virtual DbSet<Voiceover> Voiceovers { get; set; }
-
-   
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
