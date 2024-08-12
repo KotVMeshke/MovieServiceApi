@@ -399,3 +399,8 @@ FodyWeavers.xsd
 
 # Confidential data
 appparams.json
+/MovieServiceApi/.dockerignore
+/MovieServiceApi/docker-compose.override.yml
+/MovieServiceApi/docker-compose.dcproj
+/MovieServiceApi/docker-compose.yml
+/MovieServiceApi/launchSettings.json
