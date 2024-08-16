@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieServiceApi.DataBase.Entities;
 using MovieServiceApi.Users.DTO;
 using MovieServiceApi.Users.Services;
 using MovieServiceApi.Utils.Policies;
@@ -15,11 +16,13 @@ namespace MovieServiceApi.Users.Endpoints
                 .WithOpenApi();
             builder.MapPost("/registration", RegisterUser)
                 .WithOpenApi();
-            builder.MapPatch("/ban/{userId:int}", BanUser)
+            builder.MapPatch("/{userId:int}/ban", BanUser)
                .WithOpenApi();
-            builder.MapPatch("/unban/{userId:int}", UnBanUser)
+            builder.MapPatch("/{userId:int}/unban", UnBanUser)
                 .WithOpenApi();
-            builder.MapGet("/find",FindUser)
+            builder.MapGet("/",FindUsers)
+                .WithOpenApi();
+            builder.MapGet("/{userId:int}", FindUser)
                 .WithOpenApi();
         }
 
@@ -54,13 +57,21 @@ namespace MovieServiceApi.Users.Endpoints
         }
 
         [Authorize(Policy = $"{PolicyType.AdministratorPolicy}")]
-        private async static Task<IResult> FindUser([FromServices] UserService service, [AsParameters] UserFilterDTO dto)
+        private async static Task<IResult> FindUser([FromServices] UserService service, int userId)
+        {
+            var user = await service.FindUser(userId);
+            return user is not null ? Results.Ok(user) : Results.NotFound();
+        }
+
+        [Authorize(Policy = $"{PolicyType.AdministratorPolicy}")]
+        private async static Task<IResult> FindUsers([FromServices] UserService service, [AsParameters] UserFilterDTO dto)
         {
             var users = await service.FindUsers(dto);
-            return Results.Ok(users);
+            return users is not null ? Results.Ok(users) : Results.NotFound();
         }
-        
-      
+
+
+
 
 
     }

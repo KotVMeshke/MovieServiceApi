@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Models;
 using MovieServiceApi.ExceptionHandler;
 using MovieServiceApi.Utils.Policies;
 using MovieServiceApi.Utils.Roles;
+using MovieServiceApi.Movies.Services;
+using MovieServiceApi.Movies.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //builder.Services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<MovieService>();
 
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 //    .AddCookie();
@@ -99,5 +102,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGroup("/api/user").MapUser();
+app.MapGroup("/api/movie").MapMovies();
 app.Run();
 

@@ -109,6 +109,33 @@ namespace MovieServiceApi.Users.Services
             }
         }
 
+        public async Task<UserDTO?> FindUser(int userId)
+        {
+            try
+            {
+                var users = await db.Users
+                    .Include(u => u.UserRoleNavigation)
+                    .Select(u => new UserDTO()
+                    {
+                        Id = u.UsrId,
+                        Role = u.UserRoleNavigation.UrName,
+                        UserEmail = u.UsrEmail,
+                        UserName = u.UsrName,
+                        BanStatus = u.UserBannedBy == null ? false : true
+                    })
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                logger.LogInformation("User {id} has been found: ", userId);
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Exception was occured during user searching: {ex}", ex);
+                return null;
+            }
+        }
+
 
         private IQueryable<User> CreateQuery(UserFilterDTO dto)
         {
