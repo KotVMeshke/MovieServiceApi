@@ -1,6 +1,6 @@
-﻿namespace MovieServiceApi.Crew.DTO
+﻿namespace MovieServiceApi.Persons.DTO
 {
-    public class ShortCrewMemeberDTO
+    public class ShortPersonMemeberDTO
     {
         public int Id { get; set; }
         public string? Role { get; set; }

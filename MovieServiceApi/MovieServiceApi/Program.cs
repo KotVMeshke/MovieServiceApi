@@ -13,6 +13,8 @@ using MovieServiceApi.Utils.Policies;
 using MovieServiceApi.Utils.Roles;
 using MovieServiceApi.Movies.Services;
 using MovieServiceApi.Movies.Endpoints;
+using MovieServiceApi.Persons.Services;
+using MovieServiceApi.Persons.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,9 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MovieService>();
-
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie();
+builder.Services.AddScoped<PersonService>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -103,5 +103,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapGroup("/api/user").MapUser();
 app.MapGroup("/api/movie").MapMovies();
+app.MapGroup("/api/person").MapCrew();
 app.Run();
 

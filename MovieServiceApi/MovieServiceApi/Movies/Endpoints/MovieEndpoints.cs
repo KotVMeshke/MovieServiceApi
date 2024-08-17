@@ -34,9 +34,6 @@ namespace MovieServiceApi.Movies.Endpoints
         }
         private static async Task<IResult> GetFilms([FromServices] MovieService service, [AsParameters] MovieFilterDTO dto)
         {
-            //if (dto.ReleaseDateStart is not null && dto.ReleaseDateEnd is not null && dto.ReleaseDateStart > dto.ReleaseDateEnd)
-            //    return Results.StatusCode(StatusCodes.Status406NotAcceptable);
-
             var films = await service.GetFilms(dto);
 
             return films is null ? Results.StatusCode(StatusCodes.Status500InternalServerError) : Results.Ok(films);

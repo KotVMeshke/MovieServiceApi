@@ -3,7 +3,7 @@ using MovieServiceApi.DataBase.Context;
 using MovieServiceApi.DataBase.Entities;
 using MovieServiceApi.Movies.DTO;
 using MovieServiceApi.Users.Services;
-using MovieServiceApi.Crew.DTO;
+using MovieServiceApi.Persons.DTO;
 using MovieServiceApi.Genres.DTO;
 
 namespace MovieServiceApi.Movies.Services
@@ -88,7 +88,7 @@ namespace MovieServiceApi.Movies.Services
 			}
 		}
 
-		public async Task<List<ShortCrewMemeberDTO>?> GetFilmCrew(int filmId)
+		public async Task<List<ShortPersonMemeberDTO>?> GetFilmCrew(int filmId)
 		{
 			try
 			{
@@ -96,7 +96,7 @@ namespace MovieServiceApi.Movies.Services
 					.Where(f => f.FcrFilm == filmId)
 					.Include(f => f.FcrPersonNavigation)
 					.Include(f => f.FcrRoleNavigation)
-					.Select(f => new ShortCrewMemeberDTO()
+					.Select(f => new ShortPersonMemeberDTO()
 					{
 						Id = f.FcrPerson,
 						Name = f.FcrPersonNavigation.PerName,
@@ -138,10 +138,14 @@ namespace MovieServiceApi.Movies.Services
 		}
 		private IQueryable<FilmInfo> CreateQuery(MovieFilterDTO dto)
 		{
+			var startDate = new DateOnly(dto.StartYear.GetValueOrDefault(1), dto.StartMonth.GetValueOrDefault(1), dto.StartDay.GetValueOrDefault(1));
+			var endDate = new DateOnly(dto.EndYear.GetValueOrDefault(1), dto.EndMonth.GetValueOrDefault(1), dto.EndDay.GetValueOrDefault(1));
+
 			IQueryable<FilmInfo> query = db.FilmInfos;
 			
 			if (dto.Name is not null) query = query.Where(f => EF.Functions.Like(f.Name, $"%{dto.Name}%"));
-			//if (dto.ReleaseDate is not null) query = query.Where(f => f.FlmReleaseDate == dto.ReleaseDate.Value);//Change to Realese time between start and end in future
+			if (startDate != DateOnly.MinValue) query = query.Where(f => f.ReleaseDate >= startDate);
+			if (endDate != DateOnly.MinValue) query = query.Where(f => f.ReleaseDate <= endDate);
 			if (dto.Age is not null) query = query.Where(f => f.Age == dto.Age);
 			if (dto.CountryName is not null) query = query.Where(f => f.CountryName == dto.CountryName);
 

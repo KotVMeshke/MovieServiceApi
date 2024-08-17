@@ -27,8 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Crew\Endpoints\" />
-    <Folder Include="Crew\Services\" />
     <Folder Include="Genres\Endpoints\" />
     <Folder Include="Genres\Services\" />
   </ItemGroup>
