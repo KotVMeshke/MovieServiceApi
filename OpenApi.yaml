@@ -1,0 +1,348 @@
+openapi: 3.0.1
+info:
+  title: MovieApi
+  version: v1
+paths:
+  /api/favorites/{userId}:
+    get:
+      tags:
+        - FavoritesEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - FavoritesEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+        - name: filmId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - FavoritesEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+        - name: filmId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/movie/{filmId}:
+    get:
+      tags:
+        - MovieEndpoints
+      parameters:
+        - name: filmId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  /api/movie:
+    get:
+      tags:
+        - MovieEndpoints
+      parameters:
+        - name: Name
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: StartYear
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: StartMonth
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: StartDay
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: EndYear
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: EndMonth
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: EndDay
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: Age
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: CountryName
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - MovieEndpoints
+      parameters:
+        - name: filmId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - MovieEndpoints
+      responses:
+        '200':
+          description: OK
+  /api/movie/{filmId}/crew:
+    get:
+      tags:
+        - MovieEndpoints
+      parameters:
+        - name: filmId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/movie/{filmId}/genres:
+    get:
+      tags:
+        - MovieEndpoints
+      parameters:
+        - name: filmId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/person/{personId}:
+    get:
+      tags:
+        - PersonEndpoints
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/user/login:
+    post:
+      tags:
+        - UserEndpoints
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /api/user/registration:
+    post:
+      tags:
+        - UserEndpoints
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /api/user/{userId}/ban:
+    patch:
+      tags:
+        - UserEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+        - name: adminId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/user/{userId}/unban:
+    patch:
+      tags:
+        - UserEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+        - name: adminId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/user:
+    get:
+      tags:
+        - UserEndpoints
+      parameters:
+        - name: Id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: UserName
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: IsBanned
+          in: query
+          style: form
+          schema:
+            type: boolean
+        - name: Role
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/user/{userId}:
+    get:
+      tags:
+        - UserEndpoints
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    AuthenticationDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RegistrationDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        username:
+          type: string
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: Введите токен JWT с префиксом Bearer
+      name: Authorization
+      in: header
+security:
+  - Bearer: []
