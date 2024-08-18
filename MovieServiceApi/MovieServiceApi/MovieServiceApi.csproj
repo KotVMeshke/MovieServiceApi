@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Favorites\DTO\" />
     <Folder Include="Genres\Endpoints\" />
     <Folder Include="Genres\Services\" />
   </ItemGroup>

@@ -4,5 +4,6 @@
     {
         public static string Administrator = "Admin";
         public static string RegularUser = "User";
+        public static string[] AllRoles = [Administrator, RegularUser]; 
     }
 }

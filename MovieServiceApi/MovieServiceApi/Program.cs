@@ -15,6 +15,8 @@ using MovieServiceApi.Movies.Services;
 using MovieServiceApi.Movies.Endpoints;
 using MovieServiceApi.Persons.Services;
 using MovieServiceApi.Persons.Endpoints;
+using MovieServiceApi.Favorites.Endpoints;
+using MovieServiceApi.Favorites.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MovieService>();
 builder.Services.AddScoped<PersonService>();
+builder.Services.AddScoped<FavoritesService>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -81,7 +84,7 @@ builder.Services.AddAuthorization(options =>
     );
     options.AddPolicy(PolicyType.RegularUserPolicy, policy =>
     {
-        policy.RequireClaim(ClaimTypes.Role, RoleType.RegularUser);
+        policy.RequireClaim(ClaimTypes.Role, RoleType.AllRoles);
     }
     );
 });
@@ -104,5 +107,6 @@ if (app.Environment.IsDevelopment())
 app.MapGroup("/api/user").MapUser();
 app.MapGroup("/api/movie").MapMovies();
 app.MapGroup("/api/person").MapCrew();
+app.MapGroup("/api/favorites").MapFavorites();
 app.Run();
 
