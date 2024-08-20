@@ -19,6 +19,8 @@ using MovieServiceApi.Favorites.Endpoints;
 using MovieServiceApi.Favorites.Service;
 using MovieServiceApi.Feedbacks.Endpoints;
 using MovieServiceApi.Feedbacks.Service;
+using MovieServiceApi.Images.Endpoints;
+using MovieServiceApi.Images.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieApi", Version = "v1" });
-
+    //c.OperationFilter<FileUploadOperation>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -77,6 +79,7 @@ builder.Services.AddScoped<MovieService>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FavoritesService>();
 builder.Services.AddScoped<FeedbackService>();
+builder.Services.AddScoped<ImageService>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -112,5 +115,6 @@ app.MapGroup("/api/movie").MapMovies();
 app.MapGroup("/api/person").MapCrew();
 app.MapGroup("/api/favorites").MapFavorites();
 app.MapGroup("/api/feedback").MapFeedback();
+app.MapGroup("/api/image").MapImage();
 app.Run();
 
