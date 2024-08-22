@@ -21,10 +21,19 @@ using MovieServiceApi.Feedbacks.Endpoints;
 using MovieServiceApi.Feedbacks.Service;
 using MovieServiceApi.Images.Endpoints;
 using MovieServiceApi.Images.Service;
+using MovieServiceApi.Videos.Endpoints;
+using MovieServiceApi.Videos.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
+//builder.WebHost.UseUrls("https://localhost:5555");
 builder.Configuration.AddJsonFile("appparams.json");
+builder.Services.AddCors(options => options.AddPolicy("ReactProject", builder => builder
+                                                                                    .WithOrigins("http://localhost:3000")
+                                                                                    .AllowAnyHeader()
+                                                                                    .AllowAnyMethod()
+                                                                                    .AllowCredentials())
+);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -80,6 +89,7 @@ builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FavoritesService>();
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<VideoService>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -100,21 +110,22 @@ builder.Services.AddDbContext<MovieServiceContext>(options =>
 
 var app = builder.Build();
 //app.UseExceptionHandler();
+app.UseCors("ReactProject");
 app.UseAuthentication();
 app.UseAuthorization();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.MapGroup("/api/user").MapUser();
-app.MapGroup("/api/movie").MapMovies();
-app.MapGroup("/api/person").MapCrew();
-app.MapGroup("/api/favorites").MapFavorites();
-app.MapGroup("/api/feedback").MapFeedback();
-app.MapGroup("/api/image").MapImage();
+var globalGroup = app.MapGroup("/api/v1.0");
+globalGroup.MapGroup(@"/user").MapUser();
+globalGroup.MapGroup(@"/movie").MapMovies();
+globalGroup.MapGroup(@"/person").MapCrew();
+globalGroup.MapGroup(@"/favorites").MapFavorites();
+globalGroup.MapGroup(@"/feedback").MapFeedback();
+globalGroup.MapGroup(@"/image").MapImage();
+globalGroup.MapGroup(@"/video").MapVideo();
 app.Run();
 
